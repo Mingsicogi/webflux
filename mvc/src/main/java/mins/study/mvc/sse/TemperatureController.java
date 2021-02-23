@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * sse example(Server Sent Events) - Server Push
+ *
+ */
 @Slf4j
 @RestController
 public class TemperatureController {
