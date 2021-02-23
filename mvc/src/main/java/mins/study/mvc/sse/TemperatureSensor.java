@@ -28,7 +28,7 @@ public class TemperatureSensor {
 
     private void probe() {
         double temperature = 16 + random.nextGaussian() * 10;
-        log.info("### pub event ###");
+//        log.info("### pub event ###");
         publisher.publishEvent(new Temperature(temperature));
         executor.schedule(this::probe, random.nextInt(5000), TimeUnit.MILLISECONDS);
     }
