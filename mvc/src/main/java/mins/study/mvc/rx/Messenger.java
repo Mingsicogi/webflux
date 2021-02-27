@@ -1,10 +1,12 @@
 package mins.study.mvc.rx;
 
+import lombok.SneakyThrows;
 import rx.Observable;
 import rx.Observer;
 import rx.observables.AsyncOnSubscribe;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 public class Messenger {
@@ -41,9 +43,13 @@ public class Messenger {
                 System.out.println("ERROR : " + e.getMessage());
             }
 
+            @SneakyThrows
             @Override
-            public void onNext(Message messenger) {
-                System.out.println("[ " + receiverId + " ] : " + messenger.toString());
+            public void onNext(Message message) {
+                if("haha".equals(message.getFromId())) {
+                    Thread.sleep(5000);
+                }
+                System.out.println("[ " + receiverId + " ] : " + message.toString());
             }
         };
     }
