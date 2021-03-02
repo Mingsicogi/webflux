@@ -1,16 +1,16 @@
 package mins.study.config;
 
 import lombok.extern.slf4j.Slf4j;
-import mins.study.websocket.MyWebSocketHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.WebSocketService;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
-import org.springframework.web.reactive.socket.server.upgrade.TomcatRequestUpgradeStrategy;
+import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -31,22 +31,23 @@ public class WebSocketConfiguration {
      * @return
      */
     @Bean
-    public Map<String, WebSocketHandler> webHandlers() {
+    public Map<String, WebSocketHandler> webHandlerRoutingManager() {
         return new HashMap<>();
     }
 
     /**
      * web handler 관리를 위한 handler mapping
      *
-     * @param webHandlers
+     * @param webHandlerRoutingManager
      * @return
      */
     @Bean
-    public HandlerMapping handlerMapping(Map<String, WebSocketHandler> webHandlers) {
-
-        webHandlers.put("/my", new MyWebSocketHandler());
-
-        return new SimpleUrlHandlerMapping(webHandlers);
+    public HandlerMapping handlerMapping(Map<String, WebSocketHandler> webHandlerRoutingManager) {
+        log.info("### setting handler ###");
+        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+        mapping.setUrlMap(webHandlerRoutingManager);
+        mapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return mapping;
     }
 
     @Bean
@@ -56,8 +57,6 @@ public class WebSocketConfiguration {
 
     @Bean
     public WebSocketService webSocketService() {
-        TomcatRequestUpgradeStrategy strategy = new TomcatRequestUpgradeStrategy();
-        strategy.setMaxSessionIdleTimeout(0L);
-        return new HandshakeWebSocketService(strategy);
+        return new HandshakeWebSocketService(new ReactorNettyRequestUpgradeStrategy());
     }
 }

@@ -1,7 +1,7 @@
 package mins.study;
 
 import lombok.RequiredArgsConstructor;
-import mins.study.websocket.MyWebSocketHandler;
+import mins.study.websocket.EchoWebSocketHandler;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -18,6 +18,6 @@ public class CoreConfiguration {
 
     @PostConstruct
     public void init() {
-        webHandlers.put("/my", new MyWebSocketHandler());
+        webHandlers.put("/my", new EchoWebSocketHandler());
     }
 }
